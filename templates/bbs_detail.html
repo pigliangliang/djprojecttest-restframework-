@@ -1,0 +1,17 @@
+{%  extends 'index.html'%}
+
+{% block page-content %}
+<div class="contents">
+
+    <h3> {{bbs_obj.name}} </h3>
+
+    <br>
+   {{bbs_obj.content|safe}}
+</div>
+
+<hr>
+
+{% endblock%}
+
+
+

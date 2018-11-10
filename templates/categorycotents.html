@@ -1,0 +1,16 @@
+
+{%  extends 'index.html'%}
+
+{% block page-content %}
+<div class="contents">
+      {%  for cate in category_obj%}
+        <h3> {{cate.title}} </h3>
+
+         <br>
+            {{cate.content|safe}}
+        {% endfor %}
+</div>
+
+<hr>
+
+{% endblock%}
