@@ -38,7 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
-    'bbs'
+    'bbs',
+    'rest_framework',
+    'drfapp',
+    'news',
+    'django_filters',
+    'crispy_forms',
+    'rest_framework.authtoken',
+
+
 ]
 
 MIDDLEWARE = [

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpRequest,JsonResponse,HttpResponseBadRequest,HttpResponseRedirect
 from django.template import loader,Context,context
-from django.shortcuts import render_to_response,render
+from django.shortcuts import render_to_response,render,HttpResponse
 
 # Create your views here.
 import logging
@@ -51,7 +51,7 @@ def register(request):
         return render_to_response('register.html',{'form':form})
 
 #-----------------------------------------------------------------
-#cookie
+#cookie session
 from .forms import RegisterForm
 def register2(request):
     if request.method=='POST':
@@ -75,10 +75,13 @@ def login2(request):
             #email = registerform.cleaned_data['email']
             user =  User.objects.filter(name__exact=username,password__exact=password)
             if user:
-
-                response = HttpResponseRedirect('/user/index2/')
-                response.set_cookie('username',username,max_age=3600)
-                return  response
+                #session
+                request.session['username']=username
+                return HttpResponseRedirect('/user/index2/')
+                #cookie
+                #response = HttpResponseRedirect('/user/index2/')
+                #response.set_cookie('username',username,max_age=3600)
+                #return  response
     else:
         registerform = RegisterForm()
         return render_to_response('login2.html',{'registerform':registerform})
@@ -86,18 +89,80 @@ def login2(request):
 
 
 def index2(request):
-    username = request.COOKIES.get('username','anyone')
+    #cookie
+    #username = request.COOKIES.get('username','anyone')
+    #session
+    username = request.session.get('username','someone')
     return render_to_response('index2.html',{'username':username})
 
-def logout(requtest):
-    #或者一
+def logout(request):
+
+    #或者一cookie
     """
     response = HttpResponse('logout')
     response.delete_cookie('username')
     return response
     """
-    #或者二
+    #或者二cookie
+    """
     response = HttpResponseRedirect('/user/index2/')
     response.delete_cookie('username')
     return response
+    """
+    #session
+    del request.session['username']
+    return HttpResponseRedirect('/user/index2')
 
+
+#
+from .forms import LoginForm
+
+def login3(request):
+    if request.method=='GET':
+        loginform = LoginForm()
+        return render_to_response('login3.html',{'loginform':loginform})
+    else:
+        obj = LoginForm(request.POST)
+        if obj.is_valid():
+            print(obj.cleaned_data)
+            return HttpResponse('sucess')
+        else:
+
+            return render_to_response('login3.html',{'loginform':obj})
+
+
+def ajax_login(request):
+    ret = {'status': True, 'msg': None}
+    if request.method=='GET':
+        return render_to_response('login3_ajax.html')
+    else:
+        obj = LoginForm(request.POST)
+        if obj.is_valid():
+            print(obj.cleaned_data)
+            ret['msg']=obj.cleaned_data
+            print(ret)
+            return HttpResponse(json.dumps(ret),content_type='application/json')
+        else:
+            return render_to_response('login3_ajax.html')
+def alogin(request):
+    """
+     ajax  post
+    :param request:
+    :return:
+    """
+    print('*'*20)
+    if request.method=='POST':
+        name = request.POST.get('name')
+        password = request.POST.get('password')
+        if name=='pig':
+            #return HttpResponse(1)
+
+            return HttpResponse('{"status":"success"}')
+        else:
+            return HttpResponse('{"status":"fail","msg":"用户名或密码错误"}')
+    else:
+
+        name = request.GET.get('name')
+        password = request.GET.get('password')
+        #print(name,password)
+        return HttpResponse('your name :{},your password :{}'.format(name,password))
