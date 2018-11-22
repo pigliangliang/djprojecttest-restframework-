@@ -3,3 +3,7 @@ drfapp 文件中包含于restframework相关的使用方式
           重写 get，post方法
     方式二：mixins和generic一起用用
           GenericAPIView继承APIView，封装了很多方法，比APIView功能更强大
+          重写get，post等方法
+    方式三：直接使用通用类方法
+            generics.ListAPIView，已经实现了get方法
+    方式四：viewsets和router
