@@ -7,3 +7,6 @@ drfapp 文件中包含于restframework相关的使用方式
     方式三：直接使用通用类方法
             generics.ListAPIView，已经实现了get方法
     方式四：viewsets和router
+            主要用到viewsets中的GenericViewSet
+    
+   
