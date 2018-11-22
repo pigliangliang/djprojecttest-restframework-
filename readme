@@ -1,2 +1,5 @@
 drfapp 文件中包含于restframework相关的使用方式
-  
+    方式一：继承APIview
+          重写 get，post方法
+    方式二：mixins和generic一起用用
+          GenericAPIView继承APIView，封装了很多方法，比APIView功能更强大
